@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const Cart = require("./cart");
 
 // Path the books are stored in
 const p = path.join(
@@ -48,6 +49,18 @@ class Product {
           console.log(err);
         });
       }
+    });
+  }
+
+  static deleteById(id) {
+    getProductFromFile((products) => {
+      const product = products.find((prod) => prod.id === id);
+      const updatedProducts = products.filter((prod) => prod.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        if (!err) {
+          Cart.deleteProduct(id, product.price);
+        }
+      });
     });
   }
 
